@@ -15,7 +15,7 @@ namespace eBilety.Models
         public int Id { get; set; }
 
         [Display(Name = "Nazwa filmu")]
-        [Required(ErrorMessage = "Name filmu jest wymagana")]
+        [Required(ErrorMessage = "Nazwa filmu jest wymagana")]
         public string Name { get; set; }
 
         [Display(Name = "Opis")]

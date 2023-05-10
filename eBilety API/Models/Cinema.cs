@@ -1,4 +1,5 @@
 ﻿using eBilety.Data.Base;
+using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
 
 namespace eBilety.Models

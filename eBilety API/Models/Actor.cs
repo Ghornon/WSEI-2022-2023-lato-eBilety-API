@@ -1,5 +1,7 @@
 ﻿using eBilety.Data.Base;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace eBilety.Models
 {
@@ -17,6 +19,7 @@ namespace eBilety.Models
         [Display(Name = "Biografia")]
         [Required(ErrorMessage = "Biografia jest wymagana")]
         public string Bio { get; set; }
+        [JsonIgnore]
         public List<ActorMovie>? ActorsMovies { get; set; }
 
     }

@@ -1,25 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\guziks\\Source\\Repos\\eBilety API\\eBilety API\\eBilety API.csproj": {}
+    "C:\\Users\\ghornon\\Source\\Repos\\Ghornon\\eBilety-API\\eBilety API\\eBilety API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\guziks\\Source\\Repos\\eBilety API\\eBilety API\\eBilety API.csproj": {
+    "C:\\Users\\ghornon\\Source\\Repos\\Ghornon\\eBilety-API\\eBilety API\\eBilety API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\guziks\\Source\\Repos\\eBilety API\\eBilety API\\eBilety API.csproj",
+        "projectUniqueName": "C:\\Users\\ghornon\\Source\\Repos\\Ghornon\\eBilety-API\\eBilety API\\eBilety API.csproj",
         "projectName": "eBilety API",
-        "projectPath": "C:\\Users\\guziks\\Source\\Repos\\eBilety API\\eBilety API\\eBilety API.csproj",
-        "packagesPath": "C:\\Users\\guziks\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\guziks\\Source\\Repos\\eBilety API\\eBilety API\\obj\\",
+        "projectPath": "C:\\Users\\ghornon\\Source\\Repos\\Ghornon\\eBilety-API\\eBilety API\\eBilety API.csproj",
+        "packagesPath": "C:\\Users\\ghornon\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ghornon\\Source\\Repos\\Ghornon\\eBilety-API\\eBilety API\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\guziks\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\ghornon\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -84,7 +79,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -96,7 +92,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.306\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
