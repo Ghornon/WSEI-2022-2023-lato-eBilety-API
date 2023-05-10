@@ -5,10 +5,14 @@ using eBilety.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+
 namespace eTickets.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin)]
-    public class MoviesController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    //[Authorize(Roles = UserRoles.Admin)]
+    [Produces("application/json")]
+    public class MoviesController : ControllerBase
     {
         private readonly IMoviesService _service;
 
@@ -18,37 +22,34 @@ namespace eTickets.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
-        {
-            var allMovies = await _service.GetAll(n => n.Cinema);
-            return View(allMovies);
-        }
-
-        [AllowAnonymous]
-        public async Task<IActionResult> Filter(string searchString)
+        [HttpGet]
+        [ProducesResponseType(typeof(Cinema), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Index([FromQuery] string? searchString)
         {
             var allMovies = await _service.GetAll(n => n.Cinema);
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                //var filteredResult = allMovies.Where(n => n.Name.ToLower().Contains(searchString.ToLower()) || n.Description.ToLower().Contains(searchString.ToLower())).ToList();
-
                 var filteredResultNew = allMovies.Where(n => string.Equals(n.Name, searchString, StringComparison.CurrentCultureIgnoreCase) || string.Equals(n.Description, searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
-                return View("Index", filteredResultNew);
+                return filteredResultNew.Count == 0 ? NotFound() : Ok(filteredResultNew);
             }
 
-            return View("Index", allMovies);
+            return Ok(allMovies);
         }
 
         //GET: Movies/Details/1
         [AllowAnonymous]
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Cinema), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Details(int id)
         {
             var movieDetail = await _service.GetMovieByIdAsync(id);
-            return View(movieDetail);
+            return movieDetail == null ? NotFound() : Ok(movieDetail);
         }
 
+        /*
         //GET: Movies/Create
         public async Task<IActionResult> Create()
         {
@@ -60,26 +61,24 @@ namespace eTickets.Controllers
 
             return View();
         }
+        */
 
         [HttpPost]
+        [ProducesResponseType(typeof(NewMovieVM), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(NewMovieVM movie)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                var movieDropdownsData = await _service.GetNewMovieDropdownsValues();
+                await _service.AddNewMovieAsync(movie);
 
-                ViewBag.Cinemas = new SelectList(movieDropdownsData.Cinemas, "Id", "Name");
-                ViewBag.Producers = new SelectList(movieDropdownsData.Producers, "Id", "FullName");
-                ViewBag.Actors = new SelectList(movieDropdownsData.Actors, "Id", "FullName");
-
-                return View(movie);
+                return Created(nameof(NewMovieVM), movie);
             }
 
-            await _service.AddNewMovieAsync(movie);
-            return RedirectToAction(nameof(Index));
+            return BadRequest(ModelState);
         }
-
-
+        
+        /*
         //GET: Movies/Edit/1
         public async Task<IActionResult> Edit(int id)
         {
@@ -128,5 +127,6 @@ namespace eTickets.Controllers
             await _service.UpdateMovieAsync(movie);
             return RedirectToAction(nameof(Index));
         }
+        */
     }
 }
