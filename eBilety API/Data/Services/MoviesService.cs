@@ -12,7 +12,7 @@ namespace eBilety.Data.Services
         {
             _context = context;
         }
-        public async Task AddNewMovieAsync(NewMovieVM data)
+        public async Task<Movie> AddNewMovieAsync(NewMovieVM data)
         {
             var newMovie = new Movie()
             {
@@ -40,11 +40,13 @@ namespace eBilety.Data.Services
                 await _context.ActorsMovies.AddAsync(newActorMovie);
             }
             await _context.SaveChangesAsync();
+
+            return newMovie;
         }
 
         public async Task<Movie> GetMovieByIdAsync(int id)
         {
-            var movieDetails = await _context.Movies
+            var movieDetails = await _context.Movies.AsNoTracking()
                 .Include(c => c.Cinema)
                 .Include(p => p.Producer)
                 .Include(am => am.ActorsMovies).ThenInclude(a => a.Actor)
@@ -65,7 +67,7 @@ namespace eBilety.Data.Services
             return response;
         }
 
-        public async Task UpdateMovieAsync(NewMovieVM data)
+        public async Task<Movie> UpdateMovieAsync(NewMovieVM data)
         {
             var dbMovie = await _context.Movies.FirstOrDefaultAsync(n => n.Id == data.Id);
 
@@ -99,6 +101,8 @@ namespace eBilety.Data.Services
                 await _context.ActorsMovies.AddAsync(newActorMovie);
             }
             await _context.SaveChangesAsync();
+
+            return dbMovie;
         }
     }
 }

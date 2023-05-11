@@ -8,7 +8,7 @@ namespace eBilety.Data.Services
     {
         Task<Movie> GetMovieByIdAsync(int id);
         Task<NewMovieDropdownsVM> GetNewMovieDropdownsValues();
-        Task AddNewMovieAsync(NewMovieVM data);
-        Task UpdateMovieAsync(NewMovieVM data);
+        Task<Movie> AddNewMovieAsync(NewMovieVM data);
+        Task<Movie> UpdateMovieAsync(NewMovieVM data);
     }
 }
