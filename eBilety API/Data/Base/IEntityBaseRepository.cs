@@ -8,8 +8,8 @@ namespace eBilety.Data.Base
         Task<IEnumerable<T>> GetAll(params Expression<Func<T, object>>[] includeProperties);
         Task<T> GetById(int id);
         Task<T> GetById(int id, params Expression<Func<T, object>>[] includeProperties);
-        Task Add(T entity);
-        Task Update(int id, T entity);
-        Task Delete(int id);
+        Task<T> Add(T entity);
+        Task<T> Update(int id, T entity);
+        Task<T> Delete(int id);
     }
 }

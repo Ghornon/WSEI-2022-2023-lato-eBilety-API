@@ -12,19 +12,22 @@ namespace eBilety.Data.Base
             _context = context;
         }
 
-        public async Task Add(T entity)
+        public async Task<T> Add(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
+
+            return entity;
         }
 
-        public async Task Delete(int id)
+        public async Task<T> Delete(int id)
         {
             var entity = await _context.Set<T>().FirstOrDefaultAsync(n => n.Id == id);
             EntityEntry entityEntry = _context.Entry<T>(entity);
             entityEntry.State = EntityState.Deleted;
 
             await _context.SaveChangesAsync();
+            return entity;
         }
 
         public async Task<IEnumerable<T>> GetAll() => await _context.Set<T>().ToListAsync();
@@ -37,7 +40,7 @@ namespace eBilety.Data.Base
 
         }
 
-        public async Task<T> GetById(int id) => await _context.Set<T>().FirstOrDefaultAsync(n => n.Id == id);
+        public async Task<T> GetById(int id) => await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(n => n.Id == id);
 
         public async Task<T> GetById(int id, params Expression<Func<T, object>>[] includeProperties)
         {
@@ -46,12 +49,14 @@ namespace eBilety.Data.Base
             return await query.FirstOrDefaultAsync(n => n.Id == id);
         }
 
-        public async Task Update(int id, T entity)
+        public async Task<T> Update(int id, T entity)
         {
-            EntityEntry entityEntry =  _context.Entry<T>(entity);
+            EntityEntry entityEntry = _context.Entry<T>(entity);
             entityEntry.State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
+
+            return entity;
         }
     }
 }
