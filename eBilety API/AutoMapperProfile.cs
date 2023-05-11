@@ -9,6 +9,7 @@ namespace eBilety.Controllers
 		{
 			CreateMap<ActorDto, Actor>();
 			CreateMap<CinemaDto, Cinema>();
+			CreateMap<ProducerDto, Producer>();
 		}
 	}
 }

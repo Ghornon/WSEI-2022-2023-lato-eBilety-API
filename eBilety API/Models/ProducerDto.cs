@@ -1,14 +1,9 @@
-﻿using eBilety.Data.Base;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace eBilety.Models
 {
-    public class Producer : IEntityBase
+    public class ProducerDto
     {
-        [Key]
-        public int Id { get; set; }
-
         [Display(Name = "Avatar")]
         [Required(ErrorMessage = "Avatar jest wymagany")]
         public string Avatar { get; set; }
@@ -21,9 +16,5 @@ namespace eBilety.Models
         [Display(Name = "Biografia")]
         [Required(ErrorMessage = "Biografia jest wymagana")]
         public string Bio { get; set; }
-
-        //Relationships
-        [JsonIgnore]
-        public List<Movie>? Movies { get; set; }
     }
 }
