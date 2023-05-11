@@ -1,84 +1,101 @@
-﻿using eBilety.Data.Services;
+﻿using AutoMapper;
+using eBilety.Data.Services;
 using eBilety.Data.Static;
 using eBilety.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 
 namespace eBilety.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin)]
-    public class CinemasController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    //[Authorize(Roles = UserRoles.Admin)]
+    [Produces("application/json")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    public class CinemasController : ControllerBase
     {
         private readonly ICinemasService _service;
-
-        public CinemasController(ICinemasService service)
+        private readonly IMapper _mapper;
+        public CinemasController(IMapper mapper, ICinemasService service)
         {
-            _service = service;
+            this._mapper = mapper;
+            this._service = service;
         }
 
         [AllowAnonymous]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Index()
         {
             var allCinemas = await _service.GetAll();
-            return View(allCinemas);
-        }
-
-
-        //Get: Cinemas/Create
-        public IActionResult Create()
-        {
-            return View();
+            return Ok(allCinemas);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Logo,Name,Description")] Cinema cinema)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Create([Bind("Logo,Name,Description")] CinemaDto cinemaDto)
         {
-            if (!ModelState.IsValid) return View(cinema);
-            await _service.Add(cinema);
-            return RedirectToAction(nameof(Index));
+            Cinema cinema = _mapper.Map<Cinema>(cinemaDto);
+
+            if (ModelState.IsValid)
+            {
+                var newCinema = await _service.Add(cinema);
+                return Created(nameof(Cinema), newCinema);
+            }
+
+            return BadRequest(ModelState);
         }
 
         //Get: Cinemas/Details/1
         [AllowAnonymous]
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Actor), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Details(int id)
         {
             var cinemaDetails = await _service.GetById(id);
-            if (cinemaDetails == null) return View("NotFound");
-            return View(cinemaDetails);
+
+            return cinemaDetails == null ? NotFound() : Ok(cinemaDetails); ;
         }
 
-        //Get: Cinemas/Edit/1
-        public async Task<IActionResult> Edit(int id)
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Edit(int id, CinemaDto cinemaDto)
         {
             var cinemaDetails = await _service.GetById(id);
-            if (cinemaDetails == null) return View("NotFound");
-            return View(cinemaDetails);
+
+            Cinema cinema = _mapper.Map<Cinema>(cinemaDto);
+            cinema.Id = id;
+
+            if (cinemaDetails == null)
+                return NotFound();
+
+
+            if (ModelState.IsValid)
+            {
+                var updatedCinema = await _service.Update(id, cinema);
+                return Ok(updatedCinema);
+            }
+
+            return BadRequest(ModelState);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Logo,Name,Description")] Cinema cinema)
-        {
-            if (!ModelState.IsValid) return View(cinema);
-            await _service.Update(id, cinema);
-            return RedirectToAction(nameof(Index));
-        }
-
-        //Get: Cinemas/Delete/1
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
             var cinemaDetails = await _service.GetById(id);
-            if (cinemaDetails == null) return View("NotFound");
-            return View(cinemaDetails);
-        }
+            if (cinemaDetails == null)
+                return NotFound();
 
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirm(int id)
-        {
-            var cinemaDetails = await _service.GetById(id);
-            if (cinemaDetails == null) return View("NotFound");
+            var deletedCinema = await _service.Delete(id);
 
-            await _service.Delete(id);
-            return RedirectToAction(nameof(Index));
+            return Ok(deletedCinema);
         }
     }
 }

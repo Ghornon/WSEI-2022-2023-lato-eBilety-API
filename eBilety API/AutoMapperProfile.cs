@@ -8,6 +8,7 @@ namespace eBilety.Controllers
 		public AutoMapperProfile()
 		{
 			CreateMap<ActorDto, Actor>();
+			CreateMap<CinemaDto, Cinema>();
 		}
 	}
 }

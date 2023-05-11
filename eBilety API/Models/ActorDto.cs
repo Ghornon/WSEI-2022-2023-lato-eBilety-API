@@ -1,6 +1,4 @@
-﻿using eBilety.Data.Base;
-
-namespace eBilety.Models
+﻿namespace eBilety.Models
 {
     public class ActorDto
     {

@@ -48,6 +48,7 @@ namespace eBilety.Controllers
             return BadRequest(ModelState);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Actor), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -86,7 +87,7 @@ namespace eBilety.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var actorDetails = await _service.GetById(id);
             if (actorDetails == null)
