@@ -14,6 +14,8 @@ namespace eBilety.Data.ViewModels
 
         [Display(Name = "Email")]
         [Required(ErrorMessage = "Email jest wymagany")]
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress]
         public string EmailAddress { get; set; }
 
         [Display(Name = "Hasło")]

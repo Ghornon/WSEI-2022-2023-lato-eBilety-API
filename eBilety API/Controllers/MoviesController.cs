@@ -10,7 +10,7 @@ namespace eTickets.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = UserRoles.Admin)]
     [Produces("application/json")]
     public class MoviesController : ControllerBase
     {

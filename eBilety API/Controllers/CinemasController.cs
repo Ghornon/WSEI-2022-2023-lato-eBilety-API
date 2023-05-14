@@ -10,7 +10,7 @@ namespace eBilety.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = UserRoles.Admin)]
     [Produces("application/json")]
     [Consumes(MediaTypeNames.Application.Json)]
     public class CinemasController : ControllerBase

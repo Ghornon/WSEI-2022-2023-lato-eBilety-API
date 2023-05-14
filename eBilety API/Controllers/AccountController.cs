@@ -2,38 +2,75 @@
 using eBilety.Data.Static;
 using eBilety.Data.ViewModels;
 using eBilety.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mime;
+using System.Security.Claims;
+using System.Text;
+
 namespace eBilety.Controllers
 {
-    public class AccountController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    public class AccountController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly AppDbContext _context;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, AppDbContext context)
+        public AccountController(IConfiguration configuration, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, AppDbContext context)
         {
+            _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
         }
 
+        private string CreateToken(ApplicationUser user, IList<string> userRoles)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, userRoles.First())
+            };
 
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("JwtSettings:Key").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Users()
         {
             var users = await _context.Users.ToListAsync();
-            return View(users);
+            return Ok(users);
         }
 
-
-        public IActionResult Login() => View(new LoginVM());
-
-        [HttpPost]
+       
+        [HttpPost("Login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login(LoginVM loginVM)
         {
-            if (!ModelState.IsValid) return View(loginVM);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var user = await _userManager.FindByEmailAsync(loginVM.EmailAddress);
             if (user != null)
@@ -44,30 +81,31 @@ namespace eBilety.Controllers
                     var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, false, false);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Index", "Movies");
+                        var userRoles = await _signInManager.UserManager.GetRolesAsync(user);
+                        var jwt = CreateToken(user, userRoles);
+                        return Ok(jwt);
                     }
                 }
-                TempData["Error"] = "Wrong credentials. Please, try again!";
-                return View(loginVM);
+                ModelState.AddModelError("Credentials", "Błędne dane uwierzytelniające. Spróbuj ponownie!");
+                return BadRequest(ModelState);
             }
 
-            TempData["Error"] = "Wrong credentials. Please, try again!";
-            return View(loginVM);
+            ModelState.AddModelError("Credentials", "Błędne dane uwierzytelniające. Spróbuj ponownie!");
+            return BadRequest(ModelState);
         }
 
-
-        public IActionResult Register() => View(new RegisterVM());
-
-        [HttpPost]
+        [HttpPost("Register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register(RegisterVM registerVM)
         {
-            if (!ModelState.IsValid) return View(registerVM);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var user = await _userManager.FindByEmailAsync(registerVM.EmailAddress);
             if (user != null)
             {
-                TempData["Error"] = "This email address is already in use";
-                return View(registerVM);
+                ModelState.AddModelError("Email", "Ten adres e-mail jest już w użyciu");
+                return BadRequest(ModelState);
             }
 
             var newUser = new ApplicationUser()
@@ -76,24 +114,34 @@ namespace eBilety.Controllers
                 Email = registerVM.EmailAddress,
                 UserName = registerVM.EmailAddress
             };
-            var newUserResponse = await _userManager.CreateAsync(newUser, registerVM.Password);
+
+           var newUserResponse = await _userManager.CreateAsync(newUser, registerVM.Password);
 
             if (newUserResponse.Succeeded)
+            {
                 await _userManager.AddToRoleAsync(newUser, UserRoles.User);
+                return Ok();
+            }
 
-            return View("RegisterCompleted");
+            foreach(var error in newUserResponse.Errors)
+            {
+                ModelState.AddModelError(error.Code, error.Description);
+            }
+            
+            return BadRequest();
         }
 
-        [HttpPost]
+        [HttpPost("Logout")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Movies");
+            return Ok();
         }
 
         public IActionResult AccessDenied(string ReturnUrl)
         {
-            return View();
+            return Unauthorized();
         }
 
     }
