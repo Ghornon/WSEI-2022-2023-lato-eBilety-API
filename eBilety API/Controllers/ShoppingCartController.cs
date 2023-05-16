@@ -1,29 +1,31 @@
 ﻿using AutoMapper;
 using eBilety.Data.Services;
+using eBilety.Data.Static;
 using eBilety.Data.ViewModels;
 using eBilety.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using System.Security.Claims;
-using Microsoft.AspNet.Identity;
 
 namespace eBilety.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = UserRoles.User)]
     [Produces("application/json")]
     [Consumes(MediaTypeNames.Application.Json)]
     public class ShoppingCartController : ControllerBase
     {
-        private readonly IShoppingCartService _service;
         private readonly IMapper _mapper;
+        private readonly IShoppingCartService _service;
+        private readonly IMoviesService _moviesService;
 
-        public ShoppingCartController(IMapper mapper, IShoppingCartService service)
+        public ShoppingCartController(IMapper mapper, IShoppingCartService service, IMoviesService moviesService)
         {
-            this._mapper = mapper;
-            this._service = service;
+            _mapper = mapper;
+            _service = service;
+            _moviesService = moviesService;
         }
 
         [HttpGet]
@@ -41,19 +43,15 @@ namespace eBilety.Controllers
         {
             ShoppingCartItem shoppingCartItem = _mapper.Map<ShoppingCartItem>(shoppingCartItemVM);
 
-            /*var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            shoppingCartItem.UserId = userId;
 
-            shoppingCartItem.UserId = userId;*/
+            shoppingCartItem.Movie = await _moviesService.GetMovieByIdAsync(shoppingCartItemVM.MovieId);
 
-            var userId = User.Identity.Name();
-            string userRole = User.FindFirstValue(ClaimTypes.Role);
-            Console.WriteLine("------------------------------------------");
-            Console.WriteLine("------------------------------------------");
-            Console.WriteLine("userId");
-            Console.WriteLine(userId);
-            Console.WriteLine(userRole);
-            Console.WriteLine("------------------------------------------");
-            Console.WriteLine("------------------------------------------");
+            if (shoppingCartItem.Movie == null)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {

@@ -8,10 +8,12 @@ namespace eBilety.Models
     {
         [Key]
         public int Id { get; set; }
+        public int MovieId { get; set; }
+        [ForeignKey("MovieId")]
         public Movie Movie { get; set; }
         public int Amount { get; set; }
         public string UserId { get; set; }
-        [ForeignKey(nameof(UserId))]
+        [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
     }
 }

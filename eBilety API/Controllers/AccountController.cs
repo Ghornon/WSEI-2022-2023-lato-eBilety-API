@@ -39,8 +39,9 @@ namespace eBilety.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, userRoles.First())
-            };
+                new Claim(ClaimTypes.Role, userRoles.First()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
+        };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("JwtSettings:Key").Value));
 
