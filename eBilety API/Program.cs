@@ -4,7 +4,6 @@ using eBilety.Data.Services;
 using eBilety.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using eBilety.Data.Cart;
 using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -41,11 +40,13 @@ builder.Services.AddScoped<ICinemasService, CinemasService>();
 builder.Services.AddScoped<IProducersService, ProducersService>();
 builder.Services.AddScoped<IMoviesService, MoviesService>();
 
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+
 builder.Services.AddScoped<IOrdersService, OrdersService>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddScoped(sc => ShoppingCart.GetShoppingCart(sc));
+/*builder.Services.AddScoped(sc => ShoppingCart.GetShoppingCart(sc));*/
 
 builder.Services.AddDistributedMemoryCache();
 

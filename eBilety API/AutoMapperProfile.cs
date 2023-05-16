@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eBilety.Data.ViewModels;
 using eBilety.Models;
 
 namespace eBilety.Controllers
@@ -10,6 +11,7 @@ namespace eBilety.Controllers
 			CreateMap<ActorDto, Actor>();
 			CreateMap<CinemaDto, Cinema>();
 			CreateMap<ProducerDto, Producer>();
+			CreateMap<ShoppingCartItemVM, ShoppingCartItem>();
 		}
 	}
 }
