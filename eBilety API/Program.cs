@@ -9,8 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,21 +41,7 @@ builder.Services.AddScoped<IProducersService, ProducersService>();
 builder.Services.AddScoped<IMoviesService, MoviesService>();
 
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
-
 builder.Services.AddScoped<IOrdersService, OrdersService>();
-
-/*builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();*/
-
-/*builder.Services.AddScoped(sc => ShoppingCart.GetShoppingCart(sc));*/
-
-/*builder.Services.AddDistributedMemoryCache();
-
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromSeconds(1800);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});*/
 
 //Authentication and authorization
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
@@ -101,12 +85,12 @@ if (app.Environment.IsDevelopment())
 //app.UseCors("NgOrigins");
 
 app.UseHttpsRedirection();
-/*app.UseSession();*/
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
+// Seed DataBase
 AppDbInitializer.Seed(app);
 AppDbInitializer.SeedUsersAndRolesAsync(app).Wait();
 
