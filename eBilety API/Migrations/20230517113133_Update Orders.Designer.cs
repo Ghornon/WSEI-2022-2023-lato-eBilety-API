@@ -12,8 +12,8 @@ using eBilety.Data;
 namespace eBilety_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230516201126_Update-ShoppingCartItem")]
-    partial class UpdateShoppingCartItem
+    [Migration("20230517113133_Update Orders")]
+    partial class UpdateOrders
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -347,10 +347,6 @@ namespace eBilety_API.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()

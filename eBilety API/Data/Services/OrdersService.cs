@@ -6,9 +6,11 @@ namespace eBilety.Data.Services
     public class OrdersService : IOrdersService
     {
         private readonly AppDbContext _context;
-        public OrdersService(AppDbContext context)
+        private readonly IShoppingCartService _shoppingCartService;
+        public OrdersService(AppDbContext context, IShoppingCartService shoppingCartService)
         {
             _context = context;
+            _shoppingCartService = shoppingCartService;
         }
 
         public async Task<List<Order>> GetOrdersByUserIdAndRoleAsync(string userId, string userRole)
@@ -23,13 +25,13 @@ namespace eBilety.Data.Services
             return orders;
         }
 
-        public async Task StoreOrderAsync(List<ShoppingCartItem> items, string userId, string userEmailAddress)
+        public async Task StoreOrderAsync(List<ShoppingCartItem> items, string userId)
         {
             var order = new Order()
             {
-                UserId = userId,
-                Email = userEmailAddress
+                UserId = userId
             };
+
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
 
@@ -43,6 +45,7 @@ namespace eBilety.Data.Services
                     Price = item.Movie.Price
                 };
                 await _context.OrderItems.AddAsync(orderItem);
+                await _shoppingCartService.Delete(item.Id);
             }
             await _context.SaveChangesAsync();
         }

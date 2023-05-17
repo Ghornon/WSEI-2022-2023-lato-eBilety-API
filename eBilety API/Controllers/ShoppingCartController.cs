@@ -30,10 +30,12 @@ namespace eBilety.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> GetShoppingCart()
         {
-            var allItems = await _service.GetAll(n => n.User);
-            return Ok(allItems);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var allItems = await _service.GetAll(n => n.Movie, n => n.Movie.Cinema, n => n.Movie.Producer);
+
+            return Ok(allItems.Where(n => n.UserId == userId));
         }
 
         [HttpPost]
@@ -46,12 +48,10 @@ namespace eBilety.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             shoppingCartItem.UserId = userId;
 
-            shoppingCartItem.Movie = await _moviesService.GetMovieByIdAsync(shoppingCartItemVM.MovieId);
+            var MovieDetailt = await _moviesService.GetMovieByIdAsync(shoppingCartItemVM.MovieId);
 
-            if (shoppingCartItem.Movie == null)
-            {
+            if (MovieDetailt == null)
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -79,8 +79,7 @@ namespace eBilety.Controllers
             if (shoppingCartItemDetails == null)
                 return NotFound();
 
-
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && shoppingCartItemDetails.MovieId == shoppingCartItemVM.MovieId)
             {
                 var updatedShoppingCartItem = await _service.Update(id, shoppingCartItem);
                 return Ok(updatedShoppingCartItem);
@@ -95,10 +94,11 @@ namespace eBilety.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var shoppingCartItemDetails = await _service.GetById(id);
+
             if (shoppingCartItemDetails == null)
                 return NotFound();
 
-            var deletedShoppingCartItem= await _service.Delete(id);
+            var deletedShoppingCartItem = await _service.Delete(id);
 
             return Ok(deletedShoppingCartItem);
         }
