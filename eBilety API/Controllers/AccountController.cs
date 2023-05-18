@@ -58,10 +58,19 @@ namespace eBilety.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Users()
         {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userRole = User.FindFirstValue(ClaimTypes.Role);
+
             var users = await _context.Users.ToListAsync();
+            users.ForEach(q => q.PasswordHash = null);
+
+            if (userRole != "Admin")
+                return Ok(users.Where(n => n.Id == userId));
+
             return Ok(users);
         }
 
@@ -133,6 +142,7 @@ namespace eBilety.Controllers
         }
 
         [HttpPost("Logout")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Logout()
         {
