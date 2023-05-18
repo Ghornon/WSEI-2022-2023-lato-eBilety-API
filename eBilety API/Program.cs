@@ -63,12 +63,12 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-// CORS
-/*builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
+
+builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
     policy =>
     {
-        policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
-    }));*/
+        policy.WithOrigins("http://localhost").AllowAnyMethod().AllowAnyHeader();
+    }));
 
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -82,7 +82,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseCors("NgOrigins");
+app.UseCors("NgOrigins");
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
