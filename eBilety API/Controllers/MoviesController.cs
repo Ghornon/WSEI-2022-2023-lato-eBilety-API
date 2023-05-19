@@ -23,7 +23,7 @@ namespace eTickets.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Movie>))]
         public async Task<IActionResult> Index([FromQuery] string? searchString)
         {
             var allMovies = await _service.GetAll(n => n.Cinema);
@@ -41,7 +41,7 @@ namespace eTickets.Controllers
         //GET: Movies/Details/1
         [AllowAnonymous]
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Movie))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Details(int id)
         {
@@ -50,7 +50,7 @@ namespace eTickets.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Movie))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(NewMovieVM movie)
         {
@@ -65,7 +65,7 @@ namespace eTickets.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Movie))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Edit(int id, NewMovieVM movie)

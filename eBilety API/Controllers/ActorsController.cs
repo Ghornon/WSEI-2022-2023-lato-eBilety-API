@@ -25,7 +25,7 @@ namespace eBilety.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ApplicationUser>))]
         public async Task<IActionResult> Index()
         {
             var data = await _service.GetAll();
@@ -33,7 +33,7 @@ namespace eBilety.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ApplicationUser))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(ActorDto actorDto)
         {
@@ -50,7 +50,7 @@ namespace eBilety.Controllers
 
         [AllowAnonymous]
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Actor), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Actor), StatusCodes.Status200OK, Type = typeof(ApplicationUser))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Details(int id)
         {
@@ -61,7 +61,7 @@ namespace eBilety.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApplicationUser))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Edit(int id, ActorDto actorDto)
@@ -85,7 +85,7 @@ namespace eBilety.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApplicationUser))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {

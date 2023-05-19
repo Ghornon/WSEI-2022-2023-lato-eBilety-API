@@ -1,4 +1,5 @@
 ﻿using eBilety.Data.Services;
+using eBilety.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
@@ -23,7 +24,7 @@ namespace eBilety.Controllers
 
         [HttpGet]
         [Route("api/Orders")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Order>))]
         public async Task<IActionResult> Index()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

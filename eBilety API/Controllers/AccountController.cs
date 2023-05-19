@@ -59,7 +59,7 @@ namespace eBilety.Controllers
 
         [HttpGet]
         [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ApplicationUser>))]
         public async Task<IActionResult> Users()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

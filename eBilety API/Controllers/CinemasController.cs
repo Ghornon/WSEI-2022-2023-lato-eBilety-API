@@ -25,7 +25,7 @@ namespace eBilety.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Cinema>))]
         public async Task<IActionResult> Index()
         {
             var allCinemas = await _service.GetAll();
@@ -33,7 +33,7 @@ namespace eBilety.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Cinema))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([Bind("Logo,Name,Description")] CinemaDto cinemaDto)
         {
@@ -51,7 +51,7 @@ namespace eBilety.Controllers
         //Get: Cinemas/Details/1
         [AllowAnonymous]
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Actor), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Actor), StatusCodes.Status200OK, Type = typeof(Cinema))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Details(int id)
         {
@@ -61,7 +61,7 @@ namespace eBilety.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Cinema))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Edit(int id, CinemaDto cinemaDto)
@@ -85,7 +85,7 @@ namespace eBilety.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Cinema))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
