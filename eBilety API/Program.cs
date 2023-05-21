@@ -80,6 +80,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    Console.WriteLine("Useing swagger inside development env");
 }
 
 app.UseCors("NgOrigins");
