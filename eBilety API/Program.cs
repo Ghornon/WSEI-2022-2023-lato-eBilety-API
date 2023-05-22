@@ -63,11 +63,10 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-
 builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
     policy =>
     {
-        policy.WithOrigins("http://localhost").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("http://localhost", "http://localhost:5173").AllowAnyMethod().AllowAnyHeader();
     }));
 
 builder.Services.AddControllers().AddJsonOptions(x =>
@@ -80,7 +79,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    Console.WriteLine("Useing swagger inside development env");
 }
 
 app.UseCors("NgOrigins");

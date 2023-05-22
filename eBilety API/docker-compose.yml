@@ -6,11 +6,11 @@ services:
           context: .
           dockerfile: Dockerfile
         ports:
-          - "80:80"
-          - "443:443"
+          - "8080:80"
           - "7180:7180"
         environment:
           - ASPNETCORE_ENVIRONMENT=Development
+          - ConnectionStrings__DevConnection=Server=db;Database=master;User=sa;Password=S3cur3P@ssW0rd!;TrustServerCertificate=True;
         depends_on:
           - db
 
@@ -22,3 +22,10 @@ services:
         environment:
             SA_PASSWORD: "S3cur3P@ssW0rd!"
             ACCEPT_EULA: "Y"
+
+    gui:
+        image: "ghornon/ebilety-gui:latest"
+        ports:
+          - "80:80"
+        depends_on:
+          - api
