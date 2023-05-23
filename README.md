@@ -2,11 +2,28 @@
 
 This is an e-ticket booking application for a cinema, developed as a study project using ASP.NET Core. The application allows users to browse through available movies and book a ticket for a specific showtime.
 
+# Final project
+
+Final project of backend programming using ASP.NET CORE
+
+## Subject
+
+L/23 N lab2/2PROG Programowanie aplikacji back-endowych
+
+## Creators
+- Szymon Guzik
+- Mateusz Dynur
+- Patryk Domagała
+
+# Docs
+
 ## Features
-Users can browse through the list of available movies and view their details.
-Users can view the showtimes of a movie and select a showtime to book tickets for.
-Users can view their booked tickets.
-Admin users can add, edit, and delete movies, showtimes, actors and producers in the cinema hall.
+The application provides the following features:
+
+1. rowse Movies: Users can browse through the list of available movies and view their details.
+2. Showtimes and Ticket Booking: Users can view the showtimes for a movie and select a showtime to book tickets.
+3. Ticket Management: Users can view their booked tickets.
+4. Admin Functionality: Admin users have additional privileges to add, edit, and delete movies, showtimes, actors, and producers in the cinema hall.
 
 ## Technologies Used
 The application is developed using the following technologies:
@@ -50,17 +67,20 @@ docker build -t ghornon/ebilety-gui .
 3. Run docker compose up
 
 ### Usage
-To use the application, follow these steps:
+To use the application, please follow these steps:
 
-1. Open the application in your web browser. Default GUI: http://localhost, API: http://localhost:8080
+1. Open the application in your web browser. The default GUI can be accessed at http://localhost, and the API at http://localhost:8080.
 2. Browse through the list of available movies and select a movie to view its details.
-3. Select a showtime to book tickets for.
-4. Select your preferred seats in the cinema hall.
-5. Confirm your booking..
+3. Select a showtime to book tickets.
+4. Choose your preferred seats in the cinema hall.
+5. Confirm your booking.
 6. You can view your booked tickets on the "All Orders" page.
-7. Admin users can add, edit, and delete movies, actors, producers, and showtime in the cinema hall by logging in with their credentials.
+Admin users can add, edit, and delete movies, actors, producers, and showtimes in the cinema hall by logging in with their credentials.
 
 ## Built-in users
+
+The application includes the following pre-configured users:
+
 ### Administrator
 - Login: admin@gmail.com
 - Password: Admin@1234!
@@ -70,7 +90,7 @@ To use the application, follow these steps:
 - Password: Janek@1234!
 
 ## Contributing
-Fill free to use
+Feel free to contribute to this project.
 
 ## License
 This project is licensed under the GNU Affero General Public License v3.0. See the LICENSE file for details.
